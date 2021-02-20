@@ -1,15 +1,14 @@
-import { fontFamily as _fontFamily } from 'tailwindcss/defaultTheme'
-
-export const purge = []
-export const darkMode = false
-export const theme = {
-  extend: {
+module.exports = {
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
     fontFamily: {
-      sans: ['Catamaran', ..._fontFamily.sans],
-    }
+      sans: ['Catamaran', 'sans-serif']
+    },
+    extend: {},
   },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
 }
-export const variants = {
-  extend: {},
-}
-export const plugins = []

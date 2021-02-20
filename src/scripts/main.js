@@ -1,3 +1,1 @@
-// import '../styles/main.css';
-
-// alert('It works!');
+import '../styles/main.css';

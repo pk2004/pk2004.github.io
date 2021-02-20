@@ -1,17 +1,15 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+import { fontFamily as _fontFamily } from 'tailwindcss/defaultTheme'
 
-module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Catamaran', ...defaultTheme.fontFamily.sans],
-      }
-    },
+export const purge = []
+export const darkMode = false
+export const theme = {
+  extend: {
+    fontFamily: {
+      sans: ['Catamaran', ..._fontFamily.sans],
+    }
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
 }
+export const variants = {
+  extend: {},
+}
+export const plugins = []

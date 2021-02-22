@@ -18,9 +18,15 @@
 	<!-- icons from https://heroicons.com -->
   </head>
   <body class="font-sans antialiased text-gray-900 leading-normal tracking-wider">
-	{% include "_head.html" %}
-	{% include "_footer.html" %}
-
+	<div class="md:w-1/2 md:mx-auto">
+		{% include "_head.html" %}
+		<div class="p-6">
+			<div class="flex-auto">
+			{{ content | safe }}  
+			</div>
+		</div>
+		{% include "_footer.html" %}
+	</div>
   </body>
 </html>
 

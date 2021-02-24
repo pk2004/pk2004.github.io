@@ -19,7 +19,7 @@ layout: layouts/home.njk
     <li>Spotify</li>
     <li>Safari</li>
     <li>Chrome</li>
-    <li>Rectanlge</li>
+    <li>Rectangle</li>
     <li>Roam Research</li>
     <li>Visual Studio Code</li>
 

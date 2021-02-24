@@ -2,8 +2,8 @@
 title: Paul Kane
 layout: layouts/home.njk
 ---
-<h1 class="font-bold text-7xl">Technology I use.</h1>
-<p class="text-xl mt-4">This is a list of hardware and software I use day to day.</p>
+<h1 class="font-bold text-7xl">My favourite tech.</h1>
+<p class="text-xl mt-4">Some of the tech stuff I use on a semi regular basis.</p>
 
 <p class="font-bold mt-4 text-lg">Hardware</p>
 <ul>

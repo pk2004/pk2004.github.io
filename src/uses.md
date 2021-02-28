@@ -14,7 +14,7 @@ layout: layouts/home.njk
 </ul>
 <p class="font-bold mt-4 text-lg">Software</p>
 <ul>
-    <li>MacOs Big Sur</li>
+    <li>macOS Big Sur</li>
     <li>Alfred</li>
     <li>Spotify</li>
     <li>Safari</li>

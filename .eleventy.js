@@ -1,4 +1,5 @@
 const fs = require("fs");
+const sharp = require("sharp");
 const { default: Image, generateHTML } = require("@11ty/eleventy-img");
 
 // Builds the photo gallery: resized AVIF/WebP/JPEG versions of each photo,
@@ -35,7 +36,13 @@ async function gearImage(item, iconPath) {
     return `<svg class="gear-placeholder" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">` +
       `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${iconPath}" /></svg>`;
   }
-  const metadata = await Image(src, {
+  // Product shots and app icons ("fit": "contain") sit on the tile's white
+  // background: flatten any transparency onto white (so the JPEG fallback
+  // isn't black), then trim the empty space so each fills its tile evenly.
+  const input = item.fit === "contain"
+    ? await sharp(src).flatten({ background: "#ffffff" }).trim({ background: "#ffffff", threshold: 10 }).toBuffer()
+    : src;
+  const metadata = await Image(input, {
     widths: [400, 800],
     formats: ["avif", "webp", "jpeg"],
     outputDir: "docs/img/gear/",

@@ -43,7 +43,7 @@ async function gearImage(item, iconPath) {
   });
   return generateHTML(metadata, {
     alt: item.name,
-    sizes: "(min-width: 1024px) 18vw, (min-width: 640px) 45vw, 100vw",
+    sizes: "(min-width: 1024px) 14vw, (min-width: 640px) 30vw, 50vw",
     loading: "lazy",
     decoding: "async",
   });

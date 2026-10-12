@@ -10,13 +10,11 @@ permalink: /uses/
 <h2 class="font-bold text-2xl mt-12 mb-4">{{ section.name }}</h2>
 <div class="gear-grid">
   {%- for item in section.items %}
-  <article class="gear-card">
-    <div class="gear-image">{% gearImage item, gear.icons[item.icon] %}</div>
-    <div class="p-4">
-      <p class="text-xs uppercase tracking-widest text-gray-500">{{ item.kind }}</p>
-      <h3 class="font-bold mt-1">{% if item.url %}<a href="{{ item.url }}">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}</h3>
-      {%- if item.note %}<p class="text-sm text-gray-600 mt-2">{{ item.note }}</p>{% endif %}
-    </div>
+  <article>
+    <div class="gear-image{% if item.fit == 'contain' %} fit-contain{% endif %}">{% gearImage item, gear.icons[item.icon] %}</div>
+    <h3 class="gear-name mt-3">{% if item.url %}<a href="{{ item.url }}">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}</h3>
+    <p class="text-xs uppercase tracking-widest text-gray-500 mt-1">{{ item.kind }}</p>
+    {%- if item.note %}<p class="text-sm text-gray-600 mt-2">{{ item.note }}</p>{% endif %}
   </article>
   {%- endfor %}
 </div>

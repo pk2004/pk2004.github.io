@@ -18,8 +18,8 @@ async function gallery(photos) {
       decoding: "async",
       class: "w-full h-auto rounded-xl",
     });
-    return `<figure class="gallery-item mb-6">` +
-      `<a href="${full.url}" data-pswp-width="${full.width}" data-pswp-height="${full.height}">${picture}</a>` +
+    return `<figure>` +
+      `<a href="${full.url}" data-pswp-width="${full.width}" data-pswp-height="${full.height}" data-cropped="true">${picture}</a>` +
       `<figcaption class="mt-2 text-sm text-gray-600">${photo.caption}</figcaption>` +
       `</figure>`;
   }));

@@ -13,7 +13,7 @@ async function gallery(photos) {
     const full = metadata.jpeg[metadata.jpeg.length - 1];
     const picture = generateHTML(metadata, {
       alt: photo.caption,
-      sizes: "(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw",
+      sizes: "(min-width: 768px) 30vw, (min-width: 640px) 50vw, 100vw",
       loading: index < 2 ? "eager" : "lazy",
       decoding: "async",
       class: "w-full h-auto rounded-xl",

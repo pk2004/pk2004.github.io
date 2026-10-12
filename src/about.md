@@ -3,7 +3,7 @@ title: Paul Kane
 layout: layouts/home.njk
 ---
 <h1 class="font-bold text-7xl">About me.</h1>
-<p class="text-xl mt-4">I've been working in the internet and media technology sector for over 20 years. I'm currently the Director of Technology for Partnerships & Distribution at ITV in London.</p>
+<p class="text-xl mt-4">I've been working in the internet and media technology sector for over 20 years. I'm currently the Director of Technology for Content Supply & Distribution at ITV in London.</p>
 <p class="mb-10 mt-10">You can email me at <a class="hover:text-green-600 bg-yellow-200" href="mailto:pk2004@gmail.com">pk2004@gmail.com</a> or you can find me on the following services: </p>
 
 <div class="flex">

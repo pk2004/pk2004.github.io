@@ -1,0 +1,37 @@
+{
+  "icons": {
+    "desktop": "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+    "phone": "M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z",
+    "speaker": "M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z",
+    "music": "M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3",
+    "globe": "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9",
+    "search": "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z",
+    "grid": "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z",
+    "notes": "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.707.707V19a2 2 0 01-2 2z",
+    "code": "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+  },
+  "sections": [
+    {
+      "name": "Hardware",
+      "items": [
+        { "name": "M1 Mac Mini", "kind": "Desktop computer", "icon": "desktop" },
+        { "name": "iPhone 16 Pro Max", "kind": "Phone", "icon": "phone" },
+        { "name": "HP Z27 4K Monitor", "kind": "Display", "icon": "desktop" },
+        { "name": "Apple HomePod Mini", "kind": "Speaker", "icon": "speaker" }
+      ]
+    },
+    {
+      "name": "Software",
+      "items": [
+        { "name": "macOS Golden Gate", "kind": "Operating system", "icon": "desktop", "url": "https://www.apple.com/uk/macos/" },
+        { "name": "Alfred", "kind": "Launcher", "icon": "search", "url": "https://www.alfredapp.com", "note": "I love Alfred - I've been a user since the very early days - pretty much the first thing I install on a new Mac." },
+        { "name": "Apple Music", "kind": "Music", "icon": "music", "url": "https://www.apple.com/uk/apple-music/" },
+        { "name": "Safari", "kind": "Browser", "icon": "globe" },
+        { "name": "Chrome", "kind": "Browser", "icon": "globe" },
+        { "name": "Rectangle", "kind": "Window manager", "icon": "grid", "url": "https://rectangleapp.com", "note": "This is a great window manager type app - includes a nice ToDo feature." },
+        { "name": "Roam Research", "kind": "Notes", "icon": "notes", "url": "https://roamresearch.com", "note": "A great linked note taking tool." },
+        { "name": "Visual Studio Code", "kind": "Code editor", "icon": "code" }
+      ]
+    }
+  ]
+}

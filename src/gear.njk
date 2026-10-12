@@ -1,0 +1,32 @@
+---
+title: Paul Kane - Gear
+layout: layouts/home.njk
+permalink: /gear/
+---
+<h1 class="font-bold text-7xl">Gear.</h1>
+<p class="text-xl mt-4">I've been a long time Mac user, since the MacPlus days... this is the gear I use at home.</p>
+
+{%- for section in gear.sections %}
+<h2 class="font-bold text-2xl mt-12 mb-4">{{ section.name }}</h2>
+<div class="gear-grid">
+  {%- for item in section.items %}
+  <article>
+    <div class="gear-image{% if item.fit == 'contain' %} fit-contain{% endif %}">{% gearImage item, gear.icons[item.icon] %}</div>
+    <h3 class="gear-name mt-3">{% if item.url %}<a href="{{ item.url }}">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}</h3>
+    <p class="text-xs uppercase tracking-widest text-gray-500 mt-1">{{ item.kind }}</p>
+    {%- if item.note %}<p class="text-sm text-gray-600 mt-2">{{ item.note }}</p>{% endif %}
+  </article>
+  {%- endfor %}
+</div>
+{%- endfor %}
+
+{%- set credited = [] %}
+{%- for section in gear.sections %}{% for item in section.items %}{% if item.image and item.credit %}{% set credited = (credited.push(item), credited) %}{% endif %}{% endfor %}{% endfor %}
+{%- if credited.length %}
+<h2 class="font-bold text-lg mt-12">Image credits</h2>
+<ul class="text-sm text-gray-600 mt-2">
+  {%- for item in credited %}
+  <li>{{ item.name }}: <a href="{{ item.source }}">{{ item.credit }}</a>, {{ item.license }}</li>
+  {%- endfor %}
+</ul>
+{%- endif %}

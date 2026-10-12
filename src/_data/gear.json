@@ -14,10 +14,10 @@
     {
       "name": "Hardware",
       "items": [
-        { "name": "M1 Mac Mini", "kind": "Desktop computer", "icon": "desktop", "image": "mac-mini.jpg", "fit": "contain" },
+        { "name": "M1 Mac Mini", "kind": "Desktop computer", "icon": "desktop", "image": "mac-mini.jpg", "fit": "contain", "note": "This has been a great workhorse and super cheap, the 8Gb RAM feels tight these days!"},
         { "name": "iPhone 16 Pro Max", "kind": "Phone", "icon": "phone", "image": "iphone-16-pro-max.jpg", "fit": "contain" },
-        { "name": "HP Z27 4K Monitor", "kind": "Display", "icon": "desktop", "image": "hp-z27.jpg", "fit": "contain" },
-        { "name": "Apple HomePod Mini", "kind": "Speaker", "icon": "speaker", "image": "homepod-mini.jpg", "fit": "contain" }
+        { "name": "HP Z27 4K Monitor", "kind": "Display", "icon": "desktop", "image": "hp-z27.jpg", "fit": "contain" "note":"Reliable and performant."},
+        { "name": "Apple HomePod Mini", "kind": "Speaker", "icon": "speaker", "image": "homepod-mini.jpg", "fit": "contain" "note":"Sound quality is pretty average but super useful in the kitchen."}
       ]
     },
     {

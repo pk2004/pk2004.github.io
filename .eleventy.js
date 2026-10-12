@@ -28,6 +28,9 @@ async function gallery(photos) {
 
 module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/img");
+    eleventyConfig.addPassthroughCopy("src/favicon.svg");
+    eleventyConfig.addPassthroughCopy("src/favicon.ico");
+    eleventyConfig.addPassthroughCopy("src/apple-touch-icon.png");
     eleventyConfig.addAsyncShortcode("gallery", gallery);
 
     return {

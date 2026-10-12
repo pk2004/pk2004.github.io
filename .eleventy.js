@@ -54,6 +54,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/favicon.svg");
     eleventyConfig.addPassthroughCopy("src/favicon.ico");
     eleventyConfig.addPassthroughCopy("src/apple-touch-icon.png");
+    eleventyConfig.addPassthroughCopy("src/_redirects");
     eleventyConfig.addAsyncShortcode("gallery", gallery);
     eleventyConfig.addAsyncShortcode("gearImage", gearImage);
 

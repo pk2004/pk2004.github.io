@@ -16,7 +16,7 @@ layout: layouts/home.njk
 <ul>
     <li><strong><a href="https://www.apple.com/uk/macos/">macOS Golden Gate</a></strong></li>
     <li><strong><a href="https://www.alfredapp.com">Alfred</a></strong> I love Alfred - I've been a user since the very early days - pretty much the first thing I install on a new Mac.</li>
-    <li><strong><a href="https://open.spotify.com/user/pk2004?si=d5d11ef404dc4582">Spotify</a></strong> <- my profile</li>
+    <li><strong><a href="https://www.apple.com/uk/apple-music/">Apple Music</a></strong></li>
     <li><strong>Safari</strong></li>
     <li><strong>Chrome</strong></li>
     <li><strong><a href="https://rectangleapp.com">Rectangle</a></strong> - this is a great window manager type app - includes a nice ToDo feature.</li>

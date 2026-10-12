@@ -24,13 +24,13 @@
       "name": "Software",
       "items": [
         { "name": "macOS Golden Gate", "kind": "Operating system", "icon": "desktop", "url": "https://www.apple.com/uk/macos/" },
-        { "name": "Alfred", "kind": "Launcher", "icon": "search", "url": "https://www.alfredapp.com", "note": "I love Alfred - I've been a user since the very early days - pretty much the first thing I install on a new Mac." },
-        { "name": "Apple Music", "kind": "Music", "icon": "music", "url": "https://www.apple.com/uk/apple-music/" },
-        { "name": "Safari", "kind": "Browser", "icon": "globe" },
-        { "name": "Chrome", "kind": "Browser", "icon": "globe" },
-        { "name": "Rectangle", "kind": "Window manager", "icon": "grid", "url": "https://rectangleapp.com", "note": "This is a great window manager type app - includes a nice ToDo feature." },
-        { "name": "Reflect Open", "kind": "Notes", "icon": "notes", "url": "https://roamresearch.com", "note": "recently moved to this from Roam Research." },
-        { "name": "Visual Studio Code", "kind": "Code editor", "icon": "code" }
+        { "name": "Alfred", "kind": "Launcher", "icon": "search", "url": "https://www.alfredapp.com", "note": "I love Alfred - I've been a user since the very early days - pretty much the first thing I install on a new Mac.", "image": "alfred.png", "fit": "contain" },
+        { "name": "Apple Music", "kind": "Music", "icon": "music", "url": "https://www.apple.com/uk/apple-music/", "image": "apple-music.webp", "fit": "contain" },
+        { "name": "Safari", "kind": "Browser", "icon": "globe", "image": "safari.jpg", "fit": "contain" },
+        { "name": "Chrome", "kind": "Browser", "icon": "globe", "image": "chrome.png", "fit": "contain" },
+        { "name": "Rectangle", "kind": "Window manager", "icon": "grid", "url": "https://rectangleapp.com", "note": "This is a great window manager type app - includes a nice ToDo feature.", "image": "rectangle.jpg", "fit": "contain" },
+        { "name": "Reflect Open", "kind": "Notes", "icon": "notes", "url": "https://reflect.app", "note": "Recently moved to this from Roam Research.", "image": "reflect.png", "fit": "contain" },
+        { "name": "Visual Studio Code", "kind": "Code editor", "icon": "code", "image": "vscode.webp", "fit": "contain" }
       ]
     }
   ]

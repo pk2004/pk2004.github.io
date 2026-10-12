@@ -36,10 +36,11 @@ async function gearImage(item, iconPath) {
     return `<svg class="gear-placeholder" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">` +
       `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${iconPath}" /></svg>`;
   }
-  // Product shots ("fit": "contain") often sit in a lot of empty white
-  // space, so trim it to make every product fill its tile evenly.
+  // Product shots and app icons ("fit": "contain") sit on the tile's white
+  // background: flatten any transparency onto white (so the JPEG fallback
+  // isn't black), then trim the empty space so each fills its tile evenly.
   const input = item.fit === "contain"
-    ? await sharp(src).trim({ background: "#ffffff", threshold: 10 }).toBuffer()
+    ? await sharp(src).flatten({ background: "#ffffff" }).trim({ background: "#ffffff", threshold: 10 }).toBuffer()
     : src;
   const metadata = await Image(input, {
     widths: [400, 800],

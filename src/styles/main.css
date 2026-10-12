@@ -6,8 +6,9 @@ body {
   background-color: #f7f2ed;
 }
 
-/* Text links in page content and the footer get a light underline that
-   darkens on hover. Icon links (.link) and gallery photos are left plain. */
+/* Text links in page content and the footer get a light underline. On
+   hover the text and underline turn black. Icon links (.link) and gallery
+   photos are left plain. */
 .content a:not(.link),
 footer a {
   text-decoration: underline;
@@ -19,7 +20,7 @@ footer a {
 
 .content a:not(.link):hover,
 footer a:hover {
-  @apply text-green-600;
+  color: #000;
   text-decoration-color: currentColor;
 }
 

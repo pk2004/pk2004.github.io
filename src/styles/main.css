@@ -6,20 +6,25 @@ body {
   background-color: #f7f2ed;
 }
 
-/* Text links in page content and the footer get the homepage email link's
-   yellow highlight. Icon links (.link) and gallery photos are left plain. */
+/* Text links in page content and the footer get a light underline that
+   darkens on hover. Icon links (.link) and gallery photos are left plain. */
 .content a:not(.link),
 footer a {
-  @apply bg-yellow-200;
+  text-decoration: underline;
+  text-decoration-color: rgba(17, 24, 39, 0.25);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
 }
 
 .content a:not(.link):hover,
 footer a:hover {
   @apply text-green-600;
+  text-decoration-color: currentColor;
 }
 
 .content #gallery a {
-  @apply bg-transparent;
+  text-decoration: none;
 }
 
 /* Photo gallery: a grid of square tiles, one column on phones and two from

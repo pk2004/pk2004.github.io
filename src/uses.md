@@ -8,7 +8,7 @@ layout: layouts/home.njk
 <p class="font-bold mt-4 text-lg">Hardware</p>
 <ul>
     <li>M1 Mac Mini</li>
-    <li>iPhone Xs Max</li>
+    <li>iPhone 16 Pro Max</li>
     <li>HP Z27 4K Monitor</li>
     <li>Apple Homepod Mini</li>
 </ul>

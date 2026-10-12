@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Photo gallery: a grid of square tiles, one column on phones and two from
+   the sm breakpoint, so photos line up row by row. The lightbox shows each
+   photo uncropped. */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gallery a,
+.gallery picture {
+  display: block;
+}
+
+.gallery img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.pswp__custom-caption {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 2rem);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.875rem;
+  text-align: center;
+}

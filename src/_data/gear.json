@@ -23,7 +23,7 @@
     {
       "name": "Software",
       "items": [
-        { "name": "macOS Golden Gate", "kind": "Operating system", "icon": "desktop", "url": "https://www.apple.com/uk/macos/" },
+        { "name": "macOS Golden Gate", "kind": "Operating system", "icon": "desktop", "url": "https://www.apple.com/uk/macos/", "image": "macos.png", "fit": "contain" },
         { "name": "Alfred", "kind": "Launcher", "icon": "search", "url": "https://www.alfredapp.com", "note": "I love Alfred - I've been a user since the very early days - pretty much the first thing I install on a new Mac.", "image": "alfred.png", "fit": "contain" },
         { "name": "Apple Music", "kind": "Music", "icon": "music", "url": "https://www.apple.com/uk/apple-music/", "image": "apple-music.webp", "fit": "contain" },
         { "name": "Safari", "kind": "Browser", "icon": "globe", "image": "safari.jpg", "fit": "contain" },

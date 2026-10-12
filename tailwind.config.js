@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./src/**/*.{md,html,njk,json,js}'],
+  purge: ['./src/**/*.{md,html,njk,json,js}', './.eleventy.js'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {

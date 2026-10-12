@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Photo gallery: masonry columns, one on phones and two from the sm breakpoint. */
+.gallery {
+  column-gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .gallery {
+    column-count: 2;
+  }
+}
+
+.gallery-item {
+  break-inside: avoid;
+}
+
+.pswp__custom-caption {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 2rem);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.875rem;
+  text-align: center;
+}

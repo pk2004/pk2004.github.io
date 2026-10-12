@@ -29,7 +29,7 @@
         { "name": "Safari", "kind": "Browser", "icon": "globe" },
         { "name": "Chrome", "kind": "Browser", "icon": "globe" },
         { "name": "Rectangle", "kind": "Window manager", "icon": "grid", "url": "https://rectangleapp.com", "note": "This is a great window manager type app - includes a nice ToDo feature." },
-        { "name": "Roam Research", "kind": "Notes", "icon": "notes", "url": "https://roamresearch.com", "note": "A great linked note taking tool." },
+        { "name": "Reflect Open", "kind": "Notes", "icon": "notes", "url": "https://roamresearch.com", "note": "recently moved to this from Roam Research." },
         { "name": "Visual Studio Code", "kind": "Code editor", "icon": "code" }
       ]
     }

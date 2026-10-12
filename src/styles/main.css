@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Text links in page content and the footer get the homepage email link's
+   yellow highlight. Icon links (.link) and gallery photos are left plain. */
+.content a:not(.link),
+footer a {
+  @apply bg-yellow-200;
+}
+
+.content a:not(.link):hover,
+footer a:hover {
+  @apply text-green-600;
+}
+
+.content #gallery a {
+  @apply bg-transparent;
+}
+
 /* Photo gallery: a grid of square tiles, one column on phones and two from
    the sm breakpoint, so photos line up row by row. The lightbox shows each
    photo uncropped. */

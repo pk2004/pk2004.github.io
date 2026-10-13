@@ -17,6 +17,18 @@ You can also add odometer readings by hand, either to fill in history or if BMW 
 - Data is stored in [Netlify Blobs](https://docs.netlify.com/blobs/overview/). BMW refresh tokens are encrypted with `SESSION_SECRET`. The browser holds only an encrypted, HttpOnly session cookie.
 - BMW allows 50 CarData API calls a day. Connecting uses about 5 of them. After that, each sync uses 1 call, and manual syncs are limited to one every 5 minutes.
 
+## iPhone widget
+
+The app includes a Home Screen and Lock Screen widget built for the free [Scriptable](https://scriptable.app) app. You don't need Xcode or an Apple Developer account.
+
+1. On your iPhone, open the app and go to **Settings → Home Screen widget → Set up widget**.
+2. Tap **Copy Scriptable script**. In Scriptable, tap **+**, paste the script, and give it a name.
+3. Long-press the Home Screen or Lock Screen, add a **Scriptable** widget, edit it, and choose the script.
+
+Sizes: small (status and miles under/over pace), medium and large (adds allowance left, daily budget, projected miles at return and days left), and the Lock Screen circular gauge, rectangular and inline styles. If the phone is offline, the widget shows the last summary it loaded.
+
+How it works: the script fetches `GET /api/widget`, which needs a read-only token sent as `Authorization: Bearer …`. The server stores only a hash of the token, so the token can't be shown again later. Creating a new script or tapping **Revoke** stops the old one from working. The script itself is `public/widget/lease-miles.scriptable.js`.
+
 ## 1. Get your BMW CarData client ID
 
 1. Sign in at the My BMW web portal and go to **Vehicle overview → BMW CarData**.

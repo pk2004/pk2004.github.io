@@ -7,6 +7,7 @@ import { ConfigError, randomId, seal, unseal } from "../lib/crypto.mjs";
 import { addReading, parseLease, toKm } from "../lib/readings.mjs";
 import * as store from "../lib/store.mjs";
 import { storeTokens, syncUser } from "../lib/sync.mjs";
+import { buildSummary, hashWidgetToken, newWidgetToken } from "../lib/widget.mjs";
 
 export const config = { path: "/api/*" };
 
@@ -44,6 +45,7 @@ function publicState(user) {
     vehicle: user?.vehicle || null,
     readings: user?.readings || [],
     lastSync: user?.lastSync || null,
+    widget: user?.widget ? { createdAt: user.widget.createdAt } : null,
     bmw: user?.bmw
       ? { status: user.bmw.refreshToken ? "connected" : user.bmw.status || "disconnected", refreshExpiresAt: user.bmw.refreshExpiresAt }
       : { status: "disconnected" },
@@ -52,6 +54,19 @@ function publicState(user) {
 
 async function readJson(req) {
   try { return await req.json(); } catch { throw new HttpError(400, "Invalid request body."); }
+}
+
+async function widgetSummary(req, url) {
+  const auth = req.headers.get("authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : url.searchParams.get("token");
+  if (!token) throw new HttpError(401, "Missing widget token.");
+  const userId = await store.getUserIdForWidget(hashWidgetToken(token));
+  const user = userId ? await store.getUser(userId) : null;
+  if (!user || user.widget?.hash !== hashWidgetToken(token)) {
+    throw new HttpError(401, "This widget link has been revoked. Create a new one in Settings.");
+  }
+  if (!user.lease) throw new HttpError(409, "Set up your lease in the app first.");
+  return json(buildSummary(user));
 }
 
 export default async function handler(req) {
@@ -68,6 +83,10 @@ export default async function handler(req) {
         throw new HttpError(415, "Expected JSON.");
       }
     }
+
+    // Home Screen widgets authenticate with their own read-only token
+    // (sent as a Bearer header) instead of the session cookie.
+    if (route === "GET /widget") return await widgetSummary(req, url);
 
     const sessionId = readSession(req);
     let user = sessionId ? await store.getUser(sessionId) : null;
@@ -139,6 +158,26 @@ export default async function handler(req) {
         return json({ status: "connected", state: publicState(await connect(result.tokens)) }, 200, setCookie);
       }
 
+      case "POST /widget-token": {
+        if (!user?.lease) throw new HttpError(400, "Set up your lease first.");
+        if (user.widget?.hash) await store.unlinkWidget(user.widget.hash);
+        const token = newWidgetToken();
+        user.widget = { hash: hashWidgetToken(token), createdAt: new Date().toISOString() };
+        await store.linkWidget(user.widget.hash, user.id);
+        await store.saveUser(user);
+        // The only time the token is ever shown; just its hash is stored.
+        return json({ ...publicState(user), widgetToken: token });
+      }
+
+      case "POST /widget-token/revoke": {
+        if (user?.widget?.hash) {
+          await store.unlinkWidget(user.widget.hash);
+          user.widget = null;
+          await store.saveUser(user);
+        }
+        return json(publicState(user));
+      }
+
       case "POST /disconnect": {
         if (user?.bmw) {
           if (user.bmw.gcid) await store.unlinkAccount(user.bmw.gcid);
@@ -151,6 +190,7 @@ export default async function handler(req) {
       case "POST /delete-account": {
         if (user) {
           if (user.bmw?.gcid) await store.unlinkAccount(user.bmw.gcid);
+          if (user.widget?.hash) await store.unlinkWidget(user.widget.hash);
           await store.deleteUser(user.id);
         }
         return json(publicState(null), 200, { "Set-Cookie": clearCookie });
@@ -172,6 +212,7 @@ export default async function handler(req) {
           for (const r of user.readings || []) {
             if (r.src === "manual") linked.readings = addReading(linked.readings, r);
           }
+          if (user.widget?.hash) await store.unlinkWidget(user.widget.hash);
           await store.deleteUser(user.id);
         }
         user = linked;

@@ -17,3 +17,8 @@ export async function listUserIds() {
   const { blobs } = await store().list({ prefix: "users/" });
   return blobs.map((b) => b.key.slice("users/".length));
 }
+
+// Widget tokens are stored only as SHA-256 hashes, pointing at their user.
+export const getUserIdForWidget = (hash) => store().get(`widgets/${hash}`, { type: "text" });
+export const linkWidget = (hash, id) => store().set(`widgets/${hash}`, id);
+export const unlinkWidget = (hash) => store().delete(`widgets/${hash}`);

@@ -1,4 +1,4 @@
-import { computeLease, KM_PER_MILE } from "./lease.js";
+import { computeLease, KM_PER_MILE, leaseStatus } from "./lease.js";
 import { renderChart } from "./chart.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -196,30 +196,25 @@ function renderHeader() {
 function renderHero(m) {
   const status = $("#hero-status");
   const u = unit();
-  let tone, label, value, caption;
+  const { tone, label } = leaseStatus(m);
+  let value, caption;
 
   if (!m.latest) {
-    tone = "neutral"; label = "Waiting for a reading";
     value = "—";
     caption = state.bmw.status === "connected"
       ? "Your first odometer reading will appear after the next sync."
       : "Connect your BMW or add an odometer reading to see how you're tracking.";
   } else if (m.phase === "before") {
-    tone = "neutral"; label = "Lease not started";
     value = dist(m.totalKm);
     caption = `${u} allowance starts ${esc(dateFmt(m.start))}.`;
   } else if (m.phase === "ended") {
     const over = m.drivenKm > m.totalKm;
-    tone = over ? "bad" : "good"; label = "Lease ended";
     value = dist(Math.abs(m.totalKm - m.drivenKm));
     caption = over
       ? `${u} over your allowance${m.excessCost ? ` — about <strong>${money(m.excessCost, state.lease.currency)}</strong> in excess charges` : ""}.`
       : `${u} left unused on your allowance.`;
   } else {
     const under = m.deltaKm >= 0;
-    const slight = !under && -m.deltaKm <= m.totalKm * 0.03;
-    tone = under ? "good" : slight ? "warn" : "bad";
-    label = under ? "On track" : slight ? "Slightly over pace" : "Over pace";
     value = dist(Math.abs(m.deltaKm));
     const budget = m.perDayKm > 0
       ? `Drive up to <strong>${dist(m.perDayKm)} ${u} a day</strong> (${dist(m.perDayKm * 7)} a week) to finish within your allowance.`
@@ -301,6 +296,70 @@ function renderAccountPanel() {
   } else {
     panel.innerHTML = `<p class="muted small">${s === "expired" ? "Your sign-in expired." : "Not connected."}</p>
       <button class="btn btn-quiet" type="button" data-action="connect">Connect BMW</button>`;
+  }
+}
+
+// ---------- Home Screen widget ----------
+
+let widgetToken = null; // shown once, right after it's created
+let widgetTemplate = null;
+
+// Fetched ahead of time: iOS only allows clipboard writes directly inside
+// the tap handler, with no network wait in between.
+async function loadWidgetTemplate() {
+  if (widgetTemplate) return;
+  try { widgetTemplate = await (await fetch("/widget/lease-miles.scriptable.js")).text(); } catch { /* retried on next open */ }
+}
+
+function widgetScript() {
+  return widgetTemplate.replace("__BASE_URL__", location.origin).replace("__TOKEN__", widgetToken);
+}
+
+function renderWidgetPanel() {
+  const panel = $("#widget-panel");
+  if (widgetToken) {
+    loadWidgetTemplate();
+    panel.innerHTML = `
+      <ol class="steps">
+        <li>Install <strong>Scriptable</strong> (free) from the App Store.</li>
+        <li>Copy the script below, then in Scriptable tap <strong>+</strong> and paste it.</li>
+        <li>Long-press your Home Screen or Lock Screen, add a <strong>Scriptable</strong> widget, tap it and choose the script.</li>
+      </ol>
+      <div class="widget-actions">
+        <button class="btn btn-primary" type="button" data-action="copy-widget">Copy Scriptable script</button>
+        <button class="btn btn-danger" type="button" data-action="revoke-widget">Revoke</button>
+      </div>
+      <p class="muted small">The script contains a private read-only link to your mileage summary. It's only shown now; you can create a new one any time.</p>
+      <textarea class="script-box" readonly hidden aria-label="Widget script"></textarea>`;
+  } else if (state.widget) {
+    panel.innerHTML = `
+      <p class="muted small">A widget link is active (created ${esc(dateFmt(new Date(state.widget.createdAt)))}).</p>
+      <div class="widget-actions">
+        <button class="btn btn-quiet" type="button" data-action="create-widget" data-replace>Get a new script</button>
+        <button class="btn btn-danger" type="button" data-action="revoke-widget">Revoke</button>
+      </div>`;
+  } else {
+    panel.innerHTML = `
+      <p class="muted small">Show your pace on your iPhone Home Screen or Lock Screen using the free Scriptable app.</p>
+      <button class="btn btn-quiet" type="button" data-action="create-widget">Set up widget</button>`;
+  }
+}
+
+function copyWidgetScript() {
+  const box = $("#widget-panel .script-box");
+  if (!widgetTemplate) { toast("Still loading, try again in a second."); loadWidgetTemplate(); return; }
+  const text = widgetScript();
+  const fallback = () => {
+    box.value = text;
+    box.hidden = false;
+    box.focus();
+    box.select();
+    toast("Select all and copy the script below.");
+  };
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => toast("Script copied. Paste it into Scriptable."), fallback);
+  } else {
+    fallback();
   }
 }
 
@@ -386,6 +445,7 @@ function openSettings() {
   const form = $("#settings-form");
   form.innerHTML = leaseFormHTML(state.lease, "Save changes");
   renderAccountPanel();
+  renderWidgetPanel();
   $("#settings").showModal();
 }
 
@@ -415,6 +475,23 @@ document.addEventListener("click", async (e) => {
       $("#reading").showModal();
       return;
     }
+    case "create-widget":
+      if (target.hasAttribute("data-replace") && !confirm("Widgets using the current script will stop updating until you paste the new one. Continue?")) return;
+      try {
+        const res = await api("/widget-token", { method: "POST" });
+        widgetToken = res.widgetToken;
+        delete res.widgetToken;
+        state = res;
+        renderWidgetPanel();
+      } catch (ex) { toast(ex.message); }
+      return;
+    case "copy-widget":
+      return copyWidgetScript();
+    case "revoke-widget":
+      if (!confirm("Turn off the widget link? Existing widgets will stop updating.")) return;
+      state = await api("/widget-token/revoke", { method: "POST" });
+      widgetToken = null;
+      return renderWidgetPanel();
     case "disconnect":
       if (!confirm("Stop syncing with your BMW? Your readings are kept.")) return;
       state = await api("/disconnect", { method: "POST" });

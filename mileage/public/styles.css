@@ -327,6 +327,14 @@ dialog[open] { animation: rise 0.22s cubic-bezier(.2,.8,.2,1); }
 .sheet-head h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
 .sheet-section { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 20px; display: grid; gap: 10px; justify-items: start; }
 .sheet-section h3 { font-size: 15px; font-weight: 600; }
+.widget-panel { display: grid; gap: 12px; justify-items: start; width: 100%; }
+.widget-panel .steps { margin: 0; }
+.widget-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.script-box {
+  width: 100%; height: 140px; resize: vertical;
+  border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+  font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 10px;
+}
 #reading-form { display: grid; gap: 14px; margin-top: 12px; }
 
 .code-box {

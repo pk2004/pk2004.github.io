@@ -66,3 +66,15 @@ export function computeLease(lease, readings, now = new Date()) {
     startOdometerKm: lease.startOdometerKm, now,
   };
 }
+
+// The headline status shown on the dashboard and the widget.
+// tone: "good" | "warn" | "bad" | "neutral".
+export function leaseStatus(m) {
+  if (!m.latest) return { tone: "neutral", label: "Waiting for a reading" };
+  if (m.phase === "before") return { tone: "neutral", label: "Lease not started" };
+  if (m.phase === "ended") return { tone: m.drivenKm > m.totalKm ? "bad" : "good", label: "Lease ended" };
+  if (m.deltaKm >= 0) return { tone: "good", label: "On track" };
+  return -m.deltaKm <= m.totalKm * 0.03
+    ? { tone: "warn", label: "Slightly over pace" }
+    : { tone: "bad", label: "Over pace" };
+}

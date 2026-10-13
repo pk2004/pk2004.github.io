@@ -5,7 +5,13 @@ import { ConfigError, pkcePair } from "./crypto.mjs";
 
 const AUTH_URL = "https://customer.bmwgroup.com/gcdm/oauth";
 const API_URL = "https://api-cardata.bmwgroup.com";
-const SCOPE = "authenticate_user openid cardata:api:read";
+// BMW rejects the request outright if the scopes don't match the services
+// the CarData client is subscribed to, so try the API-only set first, then
+// the set a client subscribed to both the API and streaming expects.
+const SCOPES = [
+  "authenticate_user openid cardata:api:read",
+  "authenticate_user openid cardata:api:read cardata:streaming:read",
+];
 
 export const ODOMETER_KEY = "vehicle.vehicle.travelledDistance";
 export const CONTAINER_NAME = "Lease Mileage";
@@ -19,8 +25,10 @@ export class BmwError extends Error {
   }
 }
 
+// Tolerates the whitespace and quotes that easily come along when the ID is
+// copied from the BMW portal into Netlify.
 function clientId() {
-  const id = process.env.BMW_CLIENT_ID;
+  const id = (process.env.BMW_CLIENT_ID || "").trim().replace(/^["']|["']$/g, "").trim();
   if (!id) throw new ConfigError("BMW_CLIENT_ID is not set.");
   return id;
 }
@@ -37,17 +45,27 @@ async function form(path, params) {
 
 export async function startDeviceFlow() {
   const { verifier, challenge } = pkcePair();
-  const { ok, status, body } = await form("/device/code", {
-    client_id: clientId(),
-    response_type: "device_code",
-    scope: SCOPE,
-    code_challenge: challenge,
-    code_challenge_method: "S256",
-  });
-  if (!ok) {
-    throw new BmwError(body.error_description || "BMW could not start the sign-in. Check that your CarData client is subscribed to the CarData API.", { status });
+  let last;
+  for (const scope of SCOPES) {
+    last = await form("/device/code", {
+      client_id: clientId(),
+      response_type: "device_code",
+      scope,
+      code_challenge: challenge,
+      code_challenge_method: "S256",
+    });
+    if (last.ok) return { ...last.body, verifier };
+    if (last.body.error !== "invalid_request") break;
   }
-  return { ...body, verifier };
+  const { status, body } = last;
+  console.error(`BMW device code request failed (${status}): ${JSON.stringify(body)}`);
+  if (body.error === "invalid_request" || body.error === "invalid_client" || body.error === "unauthorized_client") {
+    throw new BmwError(
+      "BMW didn't accept this app's CarData client ID. In the My BMW portal (BMW CarData section), check that BMW_CLIENT_ID in Netlify matches the client ID exactly and that you've clicked \"Request access to CarData API\" for it. New clients can take a few minutes to become active.",
+      { status },
+    );
+  }
+  throw new BmwError(body.error_description || "BMW could not start the sign-in. Please try again.", { status });
 }
 
 // Returns { status: "pending" | "slow_down" | "denied" | "expired" } while

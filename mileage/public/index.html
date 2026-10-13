@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut">
+  <title>Lease Miles</title>
+  <meta name="description" content="Track your car's mileage against your lease allowance.">
+  <meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 12l5-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>
+      <span>Lease Miles</span>
+    </div>
+    <button class="icon-btn" id="open-settings" type="button" aria-label="Settings" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </header>
+
+  <main id="app" aria-live="polite">
+    <div class="loading" id="loading"><span class="spinner" aria-hidden="true"></span><span class="sr-only">Loading</span></div>
+
+    <!-- First run: lease setup -->
+    <section id="onboarding" class="onboarding" hidden>
+      <h1>Stay inside your lease miles.</h1>
+      <p class="lede">Tell us about your lease, connect your BMW, and we'll keep an eye on your pace every day.</p>
+      <div class="card">
+        <h2 class="card-title">Your lease</h2>
+        <form id="onboarding-form" class="lease-form" novalidate></form>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" hidden>
+      <div class="vehicle-row">
+        <div>
+          <p class="eyebrow" id="vehicle-sub"></p>
+          <h1 class="vehicle-name" id="vehicle-name">My car</h1>
+        </div>
+        <div class="sync" id="sync-area">
+          <span class="sync-status" id="sync-status"></span>
+          <button class="btn btn-quiet" id="sync-btn" type="button" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Sync</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="banner" id="banner" hidden></div>
+
+      <div class="card connect-card" id="connect-card" hidden>
+        <div>
+          <h2 class="card-title">Connect your BMW</h2>
+          <p class="muted">Sign in with your My BMW account once. We'll read your odometer automatically every day.</p>
+        </div>
+        <button class="btn btn-primary" type="button" data-action="connect">Connect</button>
+      </div>
+
+      <div class="card hero">
+        <div class="hero-status" id="hero-status"></div>
+        <p class="hero-figure"><span id="hero-value">—</span> <span class="hero-unit" id="hero-unit"></span></p>
+        <p class="hero-caption" id="hero-caption"></p>
+
+        <div class="meter" id="meter" role="img">
+          <div class="meter-fill" id="meter-fill"></div>
+          <div class="meter-pace" id="meter-pace"><span>Today's pace</span></div>
+        </div>
+        <div class="meter-legend">
+          <span id="meter-left"></span>
+          <span id="meter-right"></span>
+        </div>
+      </div>
+
+      <div class="tiles" id="tiles"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Miles driven over the lease</h2>
+            <p class="muted small" id="chart-sub"></p>
+          </div>
+          <ul class="legend" id="chart-legend"></ul>
+        </div>
+        <div class="chart" id="chart"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Odometer readings</h2>
+          <button class="btn btn-quiet" type="button" data-action="add-reading">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>Add reading</span>
+          </button>
+        </div>
+        <div id="readings"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Data from BMW CarData. Not affiliated with BMW AG.</p>
+  </footer>
+
+  <!-- Settings -->
+  <dialog id="settings" class="sheet" aria-labelledby="settings-title">
+    <div class="sheet-head">
+      <h2 id="settings-title">Settings</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form id="settings-form" class="lease-form" novalidate></form>
+    <div class="sheet-section">
+      <h3>BMW account</h3>
+      <div id="account-panel"></div>
+    </div>
+    <div class="sheet-section">
+      <h3>Your data</h3>
+      <p class="muted small">Deletes your lease details, readings and BMW connection from this app.</p>
+      <button class="btn btn-danger" type="button" data-action="delete-account">Delete all data</button>
+    </div>
+  </dialog>
+
+  <!-- BMW connect flow -->
+  <dialog id="connect" class="sheet narrow" aria-labelledby="connect-title">
+    <div class="sheet-head">
+      <h2 id="connect-title">Connect your BMW</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div id="connect-body"></div>
+  </dialog>
+
+  <!-- Manual reading -->
+  <dialog id="reading" class="sheet narrow" aria-labelledby="reading-title">
+    <div class="sheet-head">
+      <h2 id="reading-title">Add a reading</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form id="reading-form" novalidate>
+      <label class="field"><span>Date</span><input type="date" name="date" required></label>
+      <label class="field"><span>Odometer (<span data-unit-label></span>)</span><input type="number" name="value" inputmode="numeric" min="0" step="1" required></label>
+      <p class="form-error" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Save reading</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <div class="tooltip" id="tooltip" hidden></div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "Lease Miles",
+  "short_name": "Lease Miles",
+  "description": "Track your car's mileage against your lease allowance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f6f4",
+  "theme_color": "#f6f6f4",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

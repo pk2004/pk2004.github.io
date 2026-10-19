@@ -56,6 +56,29 @@ async function gearImage(item, iconPath) {
   });
 }
 
+// Renders a company logo from src/img/logos/ for the Work page timeline, or
+// the company's letter mark until a logo is added.
+async function companyLogo(job) {
+  const src = job.logo && `src/img/logos/${job.logo}`;
+  if (!src || !fs.existsSync(src)) {
+    return `<span class="career-mark" aria-hidden="true">${job.mark}</span>`;
+  }
+  // Flatten transparency onto white and trim empty space, as for gear images.
+  const input = await sharp(src).flatten({ background: "#ffffff" }).trim({ background: "#ffffff", threshold: 10 }).toBuffer();
+  const metadata = await Image(input, {
+    widths: [96, 192],
+    formats: ["avif", "webp", "png"],
+    outputDir: "docs/img/logos/",
+    urlPath: "/img/logos/",
+  });
+  return generateHTML(metadata, {
+    alt: `${job.company} logo`,
+    sizes: "48px",
+    loading: "lazy",
+    decoding: "async",
+  });
+}
+
 module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/img");
     eleventyConfig.addPassthroughCopy("src/favicon.svg");
@@ -64,6 +87,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/_redirects");
     eleventyConfig.addAsyncShortcode("gallery", gallery);
     eleventyConfig.addAsyncShortcode("gearImage", gearImage);
+    eleventyConfig.addAsyncShortcode("companyLogo", companyLogo);
 
     return {
       passthroughFileCopy: true,

@@ -1,0 +1,35 @@
+[
+  { "company": "ITV", "mark": "ITV", "roles": [
+    { "title": "Director of Technology, Content Supply & Distribution", "dates": "May 2020–now", "current": true },
+    { "title": "Technology Partnerships Lead", "dates": "Oct 2019–May 2020" }
+  ] },
+  { "company": "M-Netics", "mark": "MN", "roles": [
+    { "title": "Delivery Manager", "dates": "Oct 2018–Oct 2019" }
+  ] },
+  { "company": "Satchel Messaging", "mark": "SM", "roles": [
+    { "title": "Director & Co-founder", "dates": "Dec 2015–Sep 2019", "note": "Building KAPA, a new mobile messaging platform." }
+  ] },
+  { "company": "Cloudreach", "mark": "CR", "roles": [
+    { "title": "Consultant", "dates": "Jan 2016–Apr 2016" }
+  ] },
+  { "company": "Sky", "mark": "Sky", "roles": [
+    { "title": "Head of TV Research", "dates": "Jul 2013–Jun 2015" },
+    { "title": "Head of Research and Concept Development", "dates": "Jul 2010–Jul 2013" },
+    { "title": "Head of Innovation, Web ADM", "dates": "2007–Jul 2010" }
+  ] },
+  { "company": "AOL", "mark": "AOL", "roles": [
+    { "title": "Technical Consultant", "dates": "Dec 2004–Dec 2006", "note": "Development manager running the Java development team." }
+  ] },
+  { "company": "Code Futures", "mark": "CF", "roles": [
+    { "title": "Owner", "dates": "Jan 2005–Jul 2006" }
+  ] },
+  { "company": "Orange", "mark": "Or", "roles": [
+    { "title": "Tech PM, Gaming", "dates": "Feb 2003–Dec 2004" }
+  ] },
+  { "company": "Cape Clear", "mark": "CC", "roles": [
+    { "title": "Engineering Manager", "dates": "2001–2003" }
+  ] },
+  { "company": "Chello Media", "mark": "CM", "roles": [
+    { "title": "Development Director", "dates": "2000–2001" }
+  ] }
+]

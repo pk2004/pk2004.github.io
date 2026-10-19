@@ -1,0 +1,24 @@
+---
+title: Paul Kane - Work
+layout: layouts/home.njk
+permalink: /work/
+---
+<h1 class="font-bold text-7xl">Work.</h1>
+<p class="text-xl mt-4">I've worked in the internet and media technology sector for over 20 years, previously for SES (Astra), Sky x 2, UPC Media, AOL and currently ITV. In between I've consulted for cloud services companies, software vendors and built one startup. For more detail my LinkedIn profile is <a href="https://www.linkedin.com/in/paul-kane-b1162">here</a>.</p>
+
+<ol class="career mt-12">
+  {%- for job in career %}
+  {%- for role in job.roles %}
+  <li class="career-role{% if loop.first %} career-first{% endif %}{% if role.current %} career-current{% endif %}">
+    <span class="career-years">{{ role.dates }}</span>
+    <span class="career-dot" aria-hidden="true"></span>
+    <span class="career-logo">{% if loop.first %}{% companyLogo job %}{% endif %}</span>
+    <div class="career-body">
+      <p class="career-title">{{ role.title }}</p>
+      <p class="career-company">{{ job.company }}</p>
+      {%- if role.note %}<p class="career-note">{{ role.note }}</p>{% endif %}
+    </div>
+  </li>
+  {%- endfor %}
+  {%- endfor %}
+</ol>

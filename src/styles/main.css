@@ -126,3 +126,147 @@ footer a:hover {
   font-weight: 500;
   line-height: 1.25;
 }
+
+/* Work page: a vertical career timeline. Dates on the left, a dot per role
+   on the line, the company logo once per company, then the role. The
+   filled dot marks the current role. On phones the dates move under the
+   role. */
+.career {
+  list-style: none;
+  padding: 0;
+}
+
+.career-role {
+  display: grid;
+  grid-template-columns: 9.5rem 14px 48px minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: start;
+}
+
+.career-years {
+  padding-top: 0.8rem;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: #6b7280;
+}
+
+.career-dot {
+  position: relative;
+  align-self: stretch;
+  min-height: 4.5rem;
+}
+
+.career-dot::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ddd3c9;
+}
+
+.career-role:first-child .career-dot::before {
+  top: 1rem;
+}
+
+.career-role:last-child .career-dot::before {
+  bottom: auto;
+  height: 1rem;
+}
+
+.career-dot::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.8rem;
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 2px solid #111827;
+  border-radius: 50%;
+  background: #f7f2ed;
+}
+
+.career-current .career-dot::after {
+  background: #111827;
+}
+
+.career-logo picture,
+.career-logo img,
+.career-mark {
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+
+.career-logo img,
+.career-mark {
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.06);
+}
+
+.career-logo img {
+  object-fit: contain;
+  padding: 6px;
+}
+
+.career-mark {
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.career-body {
+  min-width: 0;
+  padding-top: 0.25rem;
+  padding-bottom: 1.5rem;
+}
+
+.career-title {
+  font-weight: 500;
+}
+
+.career-company,
+.career-note {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.career-note {
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 480px) {
+  .career-role {
+    grid-template-columns: 14px 40px minmax(0, 1fr);
+    column-gap: 0.75rem;
+  }
+
+  .career-years {
+    grid-column: 3;
+    grid-row: 2;
+    padding-top: 0;
+    padding-bottom: 1.25rem;
+    text-align: left;
+  }
+
+  .career-dot {
+    grid-row: 1 / span 2;
+  }
+
+  .career-logo picture,
+  .career-logo img,
+  .career-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .career-body {
+    padding-bottom: 0.25rem;
+  }
+}

@@ -31,5 +31,8 @@
   ] },
   { "company": "Chello Media", "mark": "CM", "roles": [
     { "title": "Development Director", "dates": "2000–2001" }
+  ] },
+  { "company": "BSkyB", "mark": "Sky", "roles": [
+    { "title": "Internet Technical Manager", "dates": "1997–2000" }
   ] }
 ]

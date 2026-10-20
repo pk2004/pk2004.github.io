@@ -11,6 +11,12 @@ layout: layouts/home.njk
     <li><strong><a href="https://tailwindcss.com">Tailwind CSS</a></strong> styles the pages. <a href="https://postcss.org">PostCSS</a> processes it and strips out anything unused.</li>
     <li><strong><a href="https://webpack.js.org">webpack</a></strong> bundles the CSS and JavaScript.</li>
 </ul>
+<p class="font-bold mt-4 text-lg">Reading it elsewhere</p>
+<ul>
+    <li><strong><a href="/links/feed.xml">RSS feed</a></strong> for the <a href="/links/">links</a> page.</li>
+    <li><strong>Markdown:</strong> add <code>.md</code> to any page's address, such as <a href="/work.md">/work.md</a>, for a plain Markdown version. <a href="/llms.txt">/llms.txt</a> lists them all.</li>
+    <li><strong><a href="https://github.com/mixmark-io/turndown">Turndown</a></strong> converts each page to Markdown when the site is built.</li>
+</ul>
 <p class="font-bold mt-4 text-lg">Photos</p>
 <ul>
     <li><strong><a href="https://www.11ty.dev/docs/plugins/image/">Eleventy Image</a></strong> resizes each photo and converts it to AVIF and WebP.</li>

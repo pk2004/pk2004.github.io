@@ -1,7 +1,10 @@
 const fs = require("fs");
+const path = require("path");
 const sharp = require("sharp");
 const { default: Image, generateHTML } = require("@11ty/eleventy-img");
 const pluginRss = require("@11ty/eleventy-plugin-rss");
+const TurndownService = require("turndown");
+const site = require("./src/_data/site.json");
 
 // Builds the photo gallery: resized AVIF/WebP/JPEG versions of each photo,
 // linked to the largest JPEG for the PhotoSwipe lightbox.
@@ -97,6 +100,72 @@ function groupByMonth(links) {
   return groups;
 }
 
+// Markdown versions of every page: /work/ is also served as /work.md and the
+// homepage as /index.md.
+const markdownUrl = (url) => (url === "/" ? "/index.md" : `${url.replace(/\/$/, "")}.md`);
+
+const turndown = new TurndownService({ headingStyle: "atx", bulletListMarker: "-", codeBlockStyle: "fenced" });
+turndown.remove(["script", "style"]);
+const text = (node, selector) => (node.querySelector(selector)?.textContent || "").trim();
+// Icons become their <title> text, so an icon-only link reads "[LinkedIn](...)".
+turndown.addRule("svg", {
+  filter: "svg",
+  replacement: (content, node) => text(node, "title").replace(/ icon$/i, ""),
+});
+// A career timeline role on one line: "- **Title**, Company (dates). Note".
+turndown.addRule("careerRole", {
+  filter: (node) => node.nodeName === "LI" && node.classList.contains("career-role"),
+  replacement: (content, node) => {
+    const note = text(node, ".career-note");
+    return `- **${text(node, ".career-title")}**, ${text(node, ".career-company")} (${text(node, ".career-years")})${note ? `. ${note}` : ""}\n`;
+  },
+});
+// A link log entry: the link, its site and date, then the commentary.
+turndown.addRule("linklogItem", {
+  filter: (node) => node.nodeName === "LI" && node.classList.contains("linklog-item"),
+  replacement: (content, node) => {
+    const a = node.querySelector(".linklog-title a");
+    const meta = [text(node, ".linklog-domain"), text(node, ".linklog-date")].filter(Boolean).join(", ");
+    const note = turndown.turndown(node.querySelector(".linklog-note")?.innerHTML || "").replace(/\n/g, "\n  ");
+    return `- [${a.textContent.trim()}](${a.getAttribute("href")}) (${meta})\n\n  ${note}\n\n`;
+  },
+});
+
+// After each build, convert the <main> content of every HTML page to
+// Markdown, and write the Netlify headers that serve it as text/markdown
+// plus an llms.txt index of the Markdown pages.
+function writeMarkdownVersions(outputDir, results) {
+  const pages = [];
+  for (const { url, content, outputPath } of results) {
+    if (!outputPath || !outputPath.endsWith(".html")) continue;
+    const main = content.match(/<main[^>]*>([\s\S]*)<\/main>/);
+    if (!main) continue;
+    const title = (content.match(/<title>([^<]*)<\/title>/) || [])[1] || site.title;
+    const body = turndown.turndown(main[1])
+      .replace(/\]\(\//g, `](${site.url}/`)
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+    const mdUrl = markdownUrl(url);
+    const frontMatter = `---\ntitle: ${JSON.stringify(title)}\nurl: ${site.url}${url}\n---\n\n`;
+    fs.writeFileSync(path.join(outputDir, mdUrl), `${frontMatter}${body}\n`);
+    pages.push({ url, mdUrl, title });
+  }
+  pages.sort((a, b) => a.url.localeCompare(b.url));
+
+  const headers = pages.map((p) => `${p.mdUrl}\n  Content-Type: text/markdown; charset=utf-8\n`);
+  headers.push("/links/feed.xml\n  Content-Type: application/rss+xml; charset=utf-8\n");
+  headers.push("/llms.txt\n  Content-Type: text/plain; charset=utf-8\n");
+  fs.writeFileSync(path.join(outputDir, "_headers"), headers.join("\n"));
+
+  const name = (p) => p.url === "/" ? "Home"
+    : p.title === site.title ? p.url.replace(/\//g, "").replace(/^./, (c) => c.toUpperCase())
+    : p.title.replace(`${site.title} - `, "");
+  const index = pages.map((p) => `- [${name(p)}](${site.url}${p.mdUrl})`);
+  fs.writeFileSync(path.join(outputDir, "llms.txt"),
+    `# ${site.title}\n\n> Personal site of Paul Kane, Director of Technology at ITV in London.\n\n` +
+    `Every page is also available as Markdown by adding .md to its URL.\n\n## Pages\n\n${index.join("\n")}\n`);
+}
+
 module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/img");
     eleventyConfig.addPassthroughCopy("src/favicon.svg");
@@ -112,6 +181,8 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addFilter("readableDate", readableDate);
     eleventyConfig.addFilter("domain", domain);
     eleventyConfig.addFilter("groupByMonth", groupByMonth);
+    eleventyConfig.addFilter("markdownUrl", markdownUrl);
+    eleventyConfig.on("eleventy.after", ({ directories, results }) => writeMarkdownVersions(directories.output, results));
 
     return {
       passthroughFileCopy: true,

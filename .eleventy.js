@@ -1,6 +1,7 @@
 const fs = require("fs");
 const sharp = require("sharp");
 const { default: Image, generateHTML } = require("@11ty/eleventy-img");
+const pluginRss = require("@11ty/eleventy-plugin-rss");
 
 // Builds the photo gallery: resized AVIF/WebP/JPEG versions of each photo,
 // linked to the largest JPEG for the PhotoSwipe lightbox.
@@ -79,6 +80,23 @@ async function companyLogo(job) {
   });
 }
 
+// Link log helpers.
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const readableDate = (date) => `${date.getUTCDate()} ${months[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+const monthYear = (date) => date.toLocaleString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
+const domain = (url) => new URL(url).hostname.replace(/^www\./, "");
+
+// Groups links (newest first) into [{ month, links }] for the Links page.
+function groupByMonth(links) {
+  const groups = [];
+  for (const link of links) {
+    const month = monthYear(link.date);
+    if (!groups.length || groups[groups.length - 1].month !== month) groups.push({ month, links: [] });
+    groups[groups.length - 1].links.push(link);
+  }
+  return groups;
+}
+
 module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/img");
     eleventyConfig.addPassthroughCopy("src/favicon.svg");
@@ -88,6 +106,12 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addAsyncShortcode("gallery", gallery);
     eleventyConfig.addAsyncShortcode("gearImage", gearImage);
     eleventyConfig.addAsyncShortcode("companyLogo", companyLogo);
+
+    eleventyConfig.addPlugin(pluginRss);
+    eleventyConfig.addCollection("linksNewest", (api) => api.getFilteredByTag("links").reverse());
+    eleventyConfig.addFilter("readableDate", readableDate);
+    eleventyConfig.addFilter("domain", domain);
+    eleventyConfig.addFilter("groupByMonth", groupByMonth);
 
     return {
       passthroughFileCopy: true,

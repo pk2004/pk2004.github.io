@@ -1,0 +1,26 @@
+---
+permalink: /links/feed.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title }}: Links</title>
+    <link>{{ site.url }}/links/</link>
+    <atom:link href="{{ site.url }}/links/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Things Paul Kane has been reading, with a few words on each.</description>
+    <language>en-gb</language>
+    {%- if collections.linksNewest.length %}
+    <lastBuildDate>{{ collections.linksNewest[0].date | dateToRfc822 }}</lastBuildDate>
+    {%- endif %}
+    {%- for link in collections.linksNewest.slice(0, 20) %}
+    <item>
+      <title>{{ link.data.title | escape }}</title>
+      <link>{{ link.data.url | escape }}</link>
+      <guid isPermaLink="true">{{ site.url }}/links/#{{ link.page.fileSlug }}</guid>
+      <pubDate>{{ link.date | dateToRfc822 }}</pubDate>
+      <description><![CDATA[{{ link.templateContent | safe }}]]></description>
+    </item>
+    {%- endfor %}
+  </channel>
+</rss>

@@ -18,6 +18,7 @@
   "devDependencies": {
     "@11ty/eleventy": "^3.1.6",
     "@11ty/eleventy-img": "^7.0.0",
+    "@11ty/eleventy-plugin-rss": "^2.0.4",
     "autoprefixer": "^10.2.4",
     "css-loader": "^5.2.7",
     "mini-css-extract-plugin": "^1.2.1",
@@ -28,6 +29,7 @@
     "rimraf": "^3.0.2",
     "sharp": "^0.35.5",
     "tailwindcss": "^2.0.3",
+    "turndown": "^7.2.4",
     "webpack": "^5.111.1",
     "webpack-cli": "^4.10.0"
   }

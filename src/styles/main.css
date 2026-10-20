@@ -276,3 +276,70 @@ footer a:hover {
   font-size: 0.75rem;
   color: #6b7280;
 }
+
+/* Link log: the Links page and the latest links on the homepage. */
+.linklog {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.linklog-month,
+.linklog-heading {
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.linklog-title {
+  font-weight: 500;
+}
+
+.linklog-domain {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.linklog-note {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: #374151;
+  overflow-wrap: anywhere;
+}
+
+.linklog-note p + p {
+  margin-top: 0.5rem;
+}
+
+.linklog-date {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: #6b7280;
+}
+
+.linklog-date a {
+  color: inherit;
+}
+
+.linklog-latest {
+  gap: 1.25rem;
+}
+
+.linklog-more {
+  margin-top: 1.25rem;
+}
+
+.linklog-more a::after {
+  content: " →";
+}
+
+.linklog-empty {
+  margin-top: 3rem;
+  color: #6b7280;
+}

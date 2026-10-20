@@ -9,6 +9,8 @@
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}: Links" href="/links/feed.xml">
+    <link rel="alternate" type="text/markdown" href="{{ page.url | markdownUrl }}">
     <link rel="stylesheet" type="text/css" href="/assets/main.css" />
     {%- if site.cloudflareAnalyticsToken %}
     <!-- Cloudflare Web Analytics: cookieless, no consent banner needed. -->
@@ -20,9 +22,9 @@
 	<div class="md:w-3/5 md:mx-auto">
 		{% include "_head.html" %}
 		<div class="p-6">
-			<div class="flex-auto content">
+			<main class="flex-auto content">
 			{{ content | safe }}  
-			</div>
+			</main>
 		</div>
 		{% include "_footer.html" %}
 	</div>

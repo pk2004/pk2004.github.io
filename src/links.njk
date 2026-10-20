@@ -1,0 +1,24 @@
+---
+title: Paul Kane - Links
+layout: layouts/home.njk
+permalink: /links/
+---
+<h1 class="font-bold text-7xl">Links.</h1>
+<p class="text-xl mt-4">Things I've been reading, with a few words on each. Follow along with the <a href="/links/feed.xml">RSS feed</a>.</p>
+
+{%- if collections.linksNewest.length %}
+{%- for group in collections.linksNewest | groupByMonth %}
+<h2 class="linklog-month">{{ group.month }}</h2>
+<ol class="linklog">
+  {%- for link in group.links %}
+  <li class="linklog-item" id="{{ link.page.fileSlug }}">
+    <p class="linklog-title"><a href="{{ link.data.url }}">{{ link.data.title }}</a> <span class="linklog-domain">{{ link.data.url | domain }}</span></p>
+    <div class="linklog-note">{{ link.templateContent | safe }}</div>
+    <p class="linklog-date"><a href="/links/#{{ link.page.fileSlug }}">{{ link.date | readableDate }}</a></p>
+  </li>
+  {%- endfor %}
+</ol>
+{%- endfor %}
+{%- else %}
+<p class="linklog-empty">No links yet. The first ones will appear here soon.</p>
+{%- endif %}

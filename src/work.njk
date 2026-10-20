@@ -22,3 +22,11 @@ permalink: /work/
   {%- endfor %}
   {%- endfor %}
 </ol>
+
+{%- set credited = [] %}
+{%- for job in career %}{% if job.credit %}{% set credited = (credited.push(job), credited) %}{% endif %}{% endfor %}
+{%- if credited.length %}
+<p class="career-credits">Logo credits:
+  {%- for job in credited %} {{ job.company }} logo by <a href="{{ job.source }}">{{ job.credit }}</a>, {{ job.license }}{% if not loop.last %};{% else %}.{% endif %}{% endfor %}
+</p>
+{%- endif %}

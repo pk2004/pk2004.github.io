@@ -270,3 +270,9 @@ footer a:hover {
     padding-bottom: 0.25rem;
   }
 }
+
+.career-credits {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}

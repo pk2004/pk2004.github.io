@@ -1,5 +1,5 @@
 [
-  { "company": "ITV", "mark": "ITV", "roles": [
+  { "company": "ITV", "mark": "ITV", "logo": "itv.png", "roles": [
     { "title": "Director of Technology, Content Supply & Distribution", "dates": "May 2020–now", "current": true },
     { "title": "Technology Partnerships Lead", "dates": "Oct 2019–May 2020" }
   ] },
@@ -9,21 +9,21 @@
   { "company": "Satchel Messaging", "mark": "SM", "roles": [
     { "title": "Director & Co-founder", "dates": "Dec 2015–Sep 2019", "note": "Building KAPA, a new mobile messaging platform." }
   ] },
-  { "company": "Cloudreach", "mark": "CR", "roles": [
+  { "company": "Cloudreach", "mark": "CR", "logo": "cloudreach.png", "credit": "SaaSy2016", "license": "CC BY-SA 4.0, cropped to the symbol", "source": "https://commons.wikimedia.org/wiki/File:CloudreachLogo_NEWfinal_exclusion_RGB-Blue_(1).png", "roles": [
     { "title": "Consultant", "dates": "Jan 2016–Apr 2016" }
   ] },
-  { "company": "Sky", "mark": "Sky", "roles": [
+  { "company": "Sky", "mark": "Sky", "logo": "sky.png", "roles": [
     { "title": "Head of TV Research", "dates": "Jul 2013–Jun 2015" },
     { "title": "Head of Research and Concept Development", "dates": "Jul 2010–Jul 2013" },
     { "title": "Head of Innovation, Web ADM", "dates": "2007–Jul 2010" }
   ] },
-  { "company": "AOL", "mark": "AOL", "roles": [
+  { "company": "AOL", "mark": "AOL", "logo": "aol.png", "roles": [
     { "title": "Technical Consultant", "dates": "Dec 2004–Dec 2006", "note": "Development manager running the Java development team." }
   ] },
   { "company": "Code Futures", "mark": "CF", "roles": [
     { "title": "Owner", "dates": "Jan 2005–Jul 2006" }
   ] },
-  { "company": "Orange", "mark": "Or", "roles": [
+  { "company": "Orange", "mark": "Or", "logo": "orange.png", "roles": [
     { "title": "Tech PM, Gaming", "dates": "Feb 2003–Dec 2004" }
   ] },
   { "company": "Cape Clear", "mark": "CC", "roles": [
@@ -32,7 +32,7 @@
   { "company": "Chello Media", "mark": "CM", "roles": [
     { "title": "Development Director", "dates": "2000–2001" }
   ] },
-  { "company": "BSkyB", "mark": "Sky", "roles": [
+  { "company": "BSkyB", "mark": "Sky", "logo": "sky.png", "roles": [
     { "title": "Internet Technical Manager", "dates": "1997–2000" }
   ] }
 ]

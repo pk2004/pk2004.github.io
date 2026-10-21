@@ -1,6 +1,7 @@
-// Turns an email from CloudMailin (JSON normalized format) into a link log
-// entry: a Markdown file in src/links/ with the title, URL and date in its
-// front matter and the commentary as its body.
+// Turns a shared link (from the iOS Shortcut) or an email from CloudMailin
+// (JSON normalized format) into a link log entry: a Markdown file in
+// src/links/ with the title, URL and date in its front matter and the
+// commentary as its body.
 
 const URL_PATTERN = /https?:\/\/[^\s<>"')\]]+/i;
 
@@ -46,6 +47,18 @@ export function parseEmail(email) {
     .trim();
   const title = URL_PATTERN.test(subject) ? "" : subject;
   return { url, title, commentary };
+}
+
+// A direct request: { url, commentary, title }. The Shortcut may send the
+// shared page as text with the URL inside it, so take the first URL found.
+export function parseDirect(payload) {
+  const url = (String(payload.url || "").match(URL_PATTERN) || [])[0];
+  if (!url) return null;
+  return {
+    url: url.replace(/[.,;:!?]+$/, ""),
+    title: String(payload.title || "").trim(),
+    commentary: String(payload.commentary || "").replace(/\r\n/g, "\n").trim(),
+  };
 }
 
 // Reads a page's title, preferring og:title. Returns "" if it can't.

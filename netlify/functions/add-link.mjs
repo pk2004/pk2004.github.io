@@ -1,15 +1,21 @@
-// Receives emails from CloudMailin and adds each one to the link log.
+// Adds a link to the link log, from an iOS Shortcut or an email.
 //
-// CloudMailin posts to https://paulkane.co/api/add-link?key=<LINKS_SECRET>.
-// The email must come from ALLOWED_SENDER. The new link is committed to
-// src/links/ on GitHub, and Netlify rebuilds the site.
+// iOS Shortcut: POST https://paulkane.co/api/add-link with the header
+// "Authorization: Bearer <LINKS_SECRET>" and a JSON body of
+// { "url": "...", "commentary": "...", "title": "..." } (title optional).
+//
+// Email: CloudMailin posts to https://paulkane.co/api/add-link?key=<LINKS_SECRET>
+// in its JSON (Normalized) format. The email must come from ALLOWED_SENDER.
+//
+// Either way the new link is committed to src/links/ on GitHub, and Netlify
+// rebuilds the site.
 //
 // Environment variables (set in Netlify):
-//   LINKS_SECRET    long random string, also in CloudMailin's target URL
-//   ALLOWED_SENDER  the only address links are accepted from
+//   LINKS_SECRET    long random string, shared with the Shortcut or CloudMailin
 //   GITHUB_TOKEN    fine-grained token with Contents read/write on this repo
+//   ALLOWED_SENDER  the only address emailed links are accepted from (email only)
 //   GITHUB_REPO     optional, defaults to pk2004/pk2004.github.io
-import { emailAddress, fetchTitle, linkFile, parseEmail, sameSecret, slugify } from "../lib/links.mjs";
+import { emailAddress, fetchTitle, linkFile, parseDirect, parseEmail, sameSecret, slugify } from "../lib/links.mjs";
 
 export const config = { path: "/api/add-link" };
 
@@ -19,29 +25,38 @@ const reply = (status, message) => new Response(`${message}\n`, { status, header
 export default async function handler(request) {
   const { LINKS_SECRET, ALLOWED_SENDER, GITHUB_TOKEN } = process.env;
   const repo = process.env.GITHUB_REPO || "pk2004/pk2004.github.io";
-  if (!LINKS_SECRET || !ALLOWED_SENDER || !GITHUB_TOKEN) return reply(500, "Link log isn't configured.");
+  if (!LINKS_SECRET || !GITHUB_TOKEN) return reply(500, "Link log isn't configured.");
   if (request.method !== "POST") return reply(405, "Use POST.");
-  if (!sameSecret(new URL(request.url).searchParams.get("key"), LINKS_SECRET)) return reply(403, "Wrong key.");
+  const bearer = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+  const key = new URL(request.url).searchParams.get("key") || bearer;
+  if (!sameSecret(key, LINKS_SECRET)) return reply(403, "Wrong key.");
 
-  let email;
+  let payload;
   try {
-    email = await request.json();
+    payload = await request.json();
   } catch {
-    return reply(400, "Expected CloudMailin's JSON format.");
+    return reply(400, "Expected a JSON body.");
   }
 
-  // The envelope sender and the From header must both be the allowed address,
-  // and the sender's mail server must pass SPF where CloudMailin reports it.
-  const allowed = ALLOWED_SENDER.trim().toLowerCase();
-  const envelopeFrom = emailAddress(email.envelope?.from);
-  const headerFrom = emailAddress(email.headers?.from);
-  const spf = email.envelope?.spf?.result;
-  if (envelopeFrom !== allowed || headerFrom !== allowed || (spf && spf !== "pass")) {
-    return reply(403, "Links are only accepted from the site owner.");
+  let link;
+  if (payload.envelope) {
+    // An email from CloudMailin. The envelope sender and the From header must
+    // both be the allowed address, and SPF must pass where it's reported.
+    if (!ALLOWED_SENDER) return reply(500, "Email links aren't configured.");
+    const allowed = ALLOWED_SENDER.trim().toLowerCase();
+    const envelopeFrom = emailAddress(payload.envelope.from);
+    const headerFrom = emailAddress(payload.headers?.from);
+    const spf = payload.envelope.spf?.result;
+    if (envelopeFrom !== allowed || headerFrom !== allowed || (spf && spf !== "pass")) {
+      return reply(403, "Links are only accepted from the site owner.");
+    }
+    link = parseEmail(payload);
+    if (!link) return reply(422, "No link found. Put the URL on the first line of the email.");
+  } else {
+    // A direct request, such as from the iOS Shortcut.
+    link = parseDirect(payload);
+    if (!link) return reply(422, "No link found. Send a \"url\" starting with http:// or https://.");
   }
-
-  const link = parseEmail(email);
-  if (!link) return reply(422, "No link found. Put the URL on the first line of the email.");
   const title = link.title || (await fetchTitle(link.url)) || new URL(link.url).hostname;
 
   const date = new Date();
@@ -71,5 +86,5 @@ export default async function handler(request) {
     console.error("GitHub commit failed", response.status, await response.text());
     return reply(502, "Couldn't save the link to GitHub.");
   }
-  return reply(201, `Added ${path}`);
+  return reply(201, `Added "${title}" to the link log.`);
 }

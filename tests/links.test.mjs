@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, test } from "node:test";
 import handler from "../netlify/functions/add-link.mjs";
-import { emailAddress, linkFile, parseEmail, sameSecret, slugify, stripEmailNoise } from "../netlify/lib/links.mjs";
+import { emailAddress, linkFile, parseDirect, parseEmail, sameSecret, slugify, stripEmailNoise } from "../netlify/lib/links.mjs";
 
 const gmail = (plain, subject = "", from = "Paul Kane <pk2004@gmail.com>") => ({
   envelope: { from: emailAddress(from), to: "abc@cloudmailin.net", spf: { result: "pass", domain: "gmail.com" } },
@@ -33,6 +33,13 @@ describe("parseEmail", () => {
   test("returns null with no URL", () => {
     assert.equal(parseEmail(gmail("No link here", "Hello")), null);
   });
+});
+
+test("parseDirect takes the first URL from a shared page and trims the rest", () => {
+  assert.deepEqual(parseDirect({ url: "Great read https://example.com/post.", commentary: " Worth it.\r\n" }),
+    { url: "https://example.com/post", title: "", commentary: "Worth it." });
+  assert.equal(parseDirect({ url: "not a link" }), null);
+  assert.equal(parseDirect({}), null);
 });
 
 test("stripEmailNoise drops signatures, quotes and mobile footers", () => {
@@ -119,6 +126,32 @@ describe("add-link function", () => {
     spoofed.envelope.spf.result = "fail";
     assert.equal((await post(spoofed)).status, 403);
     assert.equal(calls.length, 0);
+  });
+
+  const shortcut = (body, token = "s3cret-key") => handler(new Request("https://paulkane.co/api/add-link", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(body),
+  }));
+
+  test("adds a link from the iOS Shortcut with a bearer key, no email setup needed", async () => {
+    delete process.env.ALLOWED_SENDER;
+    const response = await shortcut({ url: "https://example.com/post", commentary: "From my phone." });
+    assert.equal(response.status, 201);
+    assert.match(await response.text(), /Added "Fetched & Titled" to the link log/);
+    const put = calls.find((c) => c.init.method === "PUT");
+    assert.match(Buffer.from(JSON.parse(put.init.body).content, "base64").toString(), /url: "https:\/\/example.com\/post"[\s\S]*---\nFrom my phone.\n$/);
+  });
+
+  test("rejects the Shortcut with a wrong key, and a missing URL", async () => {
+    assert.equal((await shortcut({ url: "https://example.com" }, "nope")).status, 403);
+    assert.equal((await shortcut({ commentary: "no link" })).status, 422);
+    assert.ok(!calls.some((c) => c.init.method === "PUT"));
+  });
+
+  test("refuses emails when no allowed sender is set", async () => {
+    delete process.env.ALLOWED_SENDER;
+    assert.equal((await post(gmail("https://example.com"))).status, 500);
   });
 
   test("explains when there's no link", async () => {

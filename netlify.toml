@@ -1,0 +1,5 @@
+# Only function settings live here: the site's build command and publish
+# directory stay as configured in Netlify's dashboard.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
